@@ -2,11 +2,12 @@ package com.hackathontv.model;
 
 /**
  * Author: GrzegorzDec
- * Created by: ModelGenerator on 28/04/16
+ * Created by: ModelGenerator on 29/04/16
  */
-public class Season {
+public class SeriesItem {
     public long id;
-    public int number;
+    public String category;
     public String identifier;
     public String originalTitle;
+    public SeasonsItem[] seasons;
 }
