@@ -14,13 +14,12 @@
 
 package com.hackathontv;
 
-import com.hackathontv.model.Series;
+import com.hackathontv.model.Feed;
 import com.hackathontv.network.RestApi;
 
 import android.app.Activity;
 import android.os.Bundle;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -42,19 +41,19 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         RestApi restApi = new RestApi();
-        Call<List<Series>> seriesList = restApi.getSeriesList();
+        Call<List<Feed>> seriesList = restApi.getFranchisesList();
         seriesList.enqueue(new SeriesListCallback());
     }
 
-    private static class SeriesListCallback implements Callback<List<Series>> {
+    private static class SeriesListCallback implements Callback<List<Feed>> {
 
         @Override
-        public void onResponse(final Call<List<Series>> call, final Response<List<Series>> response) {
+        public void onResponse(final Call<List<Feed>> call, final Response<List<Feed>> response) {
 
         }
 
         @Override
-        public void onFailure(final Call<List<Series>> call, final Throwable t) {
+        public void onFailure(final Call<List<Feed>> call, final Throwable t) {
 
         }
     }
