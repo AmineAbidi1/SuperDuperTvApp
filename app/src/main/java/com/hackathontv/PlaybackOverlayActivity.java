@@ -27,9 +27,24 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.StringLoader;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.model.show.Show;
 
 /**
  * PlaybackOverlayActivity for video playback that loads PlaybackOverlayFragment
@@ -44,6 +59,12 @@ public class PlaybackOverlayActivity extends Activity implements
     private LeanbackPlaybackState mPlaybackState = LeanbackPlaybackState.IDLE;
 
     private MediaSession mSession;
+
+    private boolean mActionFired;
+
+    private int roastCount = 0;
+
+    private boolean mResetTimeElapsed;
 
     /**
      * Called when the activity is first created.
@@ -85,9 +106,89 @@ public class PlaybackOverlayActivity extends Activity implements
                     playbackOverlayFragment.togglePlayback(true);
                 }
                 return true;
+            case KeyEvent.KEYCODE_DPAD_UP:
+                if (mActionFired) {
+                    fireReaction();
+                    mActionFired = false;
+                } else {
+                    mActionFired = true;
+                }
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mActionFired) {
+                            mActionFired = false;
+                            mResetTimeElapsed = true;
+                        }
+                    }
+                }, 100);
+                break;
+
             default:
-                return super.onKeyUp(keyCode, event);
+                return PlaybackOverlayActivity.this.onKeyUp(keyCode, event);
         }
+
+        if (mResetTimeElapsed) {
+            mResetTimeElapsed = false;
+            return PlaybackOverlayActivity.this.onKeyUp(keyCode, event);
+        } else {
+            return false;
+        }
+    }
+
+    private void fireReaction() {
+        roastCount++;
+
+        String toastMsg = null;
+
+        switch (roastCount) {
+            case 1:
+                toastMsg = "You Roasted ‘Em!";
+                break;
+            case 4:
+                toastMsg = "Bloody Beginner";
+                break;
+            case 9:
+                toastMsg = "Heating Up";
+                break;
+            case 14:
+                toastMsg = "Medium Yeah";
+                break;
+            case 19:
+                toastMsg = "Well Done";
+                break;
+            case 24:
+                toastMsg = "Monster Grill";
+                break;
+            default:
+                break;
+        }
+
+        if (toastMsg != null) {
+
+            Toast toast = Toast.makeText(this, toastMsg, Toast.LENGTH_LONG);
+            View view = toast.getView();
+            toast.setGravity(Gravity.TOP, 0, 0);
+            view.setBackground(ContextCompat.getDrawable(this, R.drawable.toast_bg));
+            toast.show();
+        }
+
+        final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container);
+        final ImageView imageView = new ImageView(this);
+
+        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageView);
+        Glide.with(this).load(R.raw.fire).into(imageViewTarget);
+
+        frameLayout.addView(imageView);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                frameLayout.removeView(imageView);
+            }
+        }, 3000);
     }
 
     public void onFragmentPlayPause(final Show show, final int position, final Boolean playPause) {

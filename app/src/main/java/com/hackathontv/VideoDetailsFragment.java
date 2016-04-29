@@ -169,9 +169,9 @@ public class VideoDetailsFragment extends DetailsFragment {
                         Log.d(TAG, "details overview card image url ready: " + resource);
                         Drawable[] layers = new Drawable[2];
                         layers[0] = resource;
-                        layers[1] = ContextCompat.getDrawable(getContext(), R.drawable.double_tap);
-                        LayerDrawable layerDrawable = new LayerDrawable(layers);
-                        row.setImageDrawable(layerDrawable);
+                        //layers[1] = ContextCompat.getDrawable(getContext(), R.drawable.double_tap);
+//                        LayerDrawable layerDrawable = new LayerDrawable(layers);
+//                        row.setImageDrawable(layerDrawable);
                         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
                     }
                 });

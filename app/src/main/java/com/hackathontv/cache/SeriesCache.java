@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SeriesCache {
+
     private static SeriesCache ourInstance = new SeriesCache();
+
     private List<Feed> seriesList = new ArrayList<>();
 
     public static SeriesCache getInstance() {
@@ -18,6 +20,10 @@ public class SeriesCache {
 
     public void setSeriesList(List<Feed> seriesList) {
         this.seriesList = seriesList;
+        Feed feed = new Feed();
+        feed.id = 681;
+        feed.originalName = "Re:Roast";
+        seriesList.add(0, feed);
     }
 
     public List<Feed> getSeriesList() {
@@ -29,6 +35,6 @@ public class SeriesCache {
     }
 
     public int getLastItemId() {
-        return (int) seriesList.get(getSize()-1).id;
+        return (int) seriesList.get(getSize() - 1).id;
     }
 }
