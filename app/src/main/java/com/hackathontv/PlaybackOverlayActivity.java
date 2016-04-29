@@ -21,6 +21,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.hackathontv.model.show.Show;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.MediaPlayer;
@@ -32,7 +34,10 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -152,6 +157,7 @@ public class PlaybackOverlayActivity extends Activity implements
                 break;
             case 24:
                 toastMsg = "Monster Grill";
+                startActivity(new Intent(this, GrilledActivity.class));
                 break;
             default:
                 break;

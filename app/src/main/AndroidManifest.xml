@@ -42,6 +42,7 @@
 
         </activity>
         <activity android:name=".DetailsActivity" />
+        <activity android:name=".GrilledActivity" />
         <activity android:name=".PlaybackOverlayActivity" />
         <activity android:name=".BrowseErrorActivity" />
     </application>

@@ -28,6 +28,7 @@
     <fragment
         android:id="@+id/playback_controls_fragment"
         android:name="com.hackathontv.PlaybackOverlayFragment"
+        android:layout_marginTop="-600dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
