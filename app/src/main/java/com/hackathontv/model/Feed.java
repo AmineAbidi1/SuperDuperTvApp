@@ -10,8 +10,8 @@ public class Feed {
     public String originalName;
     public long originalBrandId;
     public String originalLanguageCode;
-    public int productionYearFrom;
-    public String productionYearTo;
+    public Integer productionYearFrom;
+    public Integer productionYearTo;
     public String genre;
     public boolean corporate;
     public String logoRiptideId;
