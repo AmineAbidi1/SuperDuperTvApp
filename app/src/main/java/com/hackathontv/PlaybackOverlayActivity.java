@@ -91,7 +91,7 @@ public class PlaybackOverlayActivity extends Activity implements
      */
     public void onFragmentPlayPause(Show show, int position, Boolean playPause) {
         //TODO:
-//        mVideoView.setVideoPath(show.getVideoUrl());
+        mVideoView.setVideoPath(show.videoUrl);
 
         if (position == 0 || mPlaybackState == LeanbackPlaybackState.IDLE) {
             setupCallbacks();

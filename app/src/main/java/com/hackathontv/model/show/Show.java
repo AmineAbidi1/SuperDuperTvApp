@@ -43,6 +43,5 @@ public class Show implements Serializable {
     public String vodPortraitImage;
     public String vodSquareImage;
     public Image image;
-
-
+    public String videoUrl;
 }
