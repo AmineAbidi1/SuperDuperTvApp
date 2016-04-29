@@ -14,6 +14,11 @@
 
 package com.hackathontv;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.model.show.Show;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
@@ -23,22 +28,21 @@ import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.Toast;
 import android.widget.VideoView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.hackathontv.model.show.Show;
 
 /**
  * PlaybackOverlayActivity for video playback that loads PlaybackOverlayFragment
  */
 public class PlaybackOverlayActivity extends Activity implements
         PlaybackOverlayFragment.OnPlayPauseClickedListener {
+
     private static final String TAG = "PlaybackOverlayActivity";
 
     private VideoView mVideoView;
+
     private LeanbackPlaybackState mPlaybackState = LeanbackPlaybackState.IDLE;
+
     private MediaSession mSession;
 
     /**
@@ -50,7 +54,7 @@ public class PlaybackOverlayActivity extends Activity implements
         setContentView(R.layout.playback_controls);
         loadViews();
         setupCallbacks();
-        mSession = new MediaSession (this, "LeanbackSampleApp");
+        mSession = new MediaSession(this, "LeanbackSampleApp");
         mSession.setCallback(new MediaSessionCallback());
         mSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
                 MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
@@ -86,10 +90,27 @@ public class PlaybackOverlayActivity extends Activity implements
         }
     }
 
-    /**
-     * Implementation of OnPlayPauseClickedListener
-     */
-    public void onFragmentPlayPause(Show show, int position, Boolean playPause) {
+    public void onFragmentPlayPause(final Show show, final int position, final Boolean playPause) {
+
+        if (show.videoUrl == null) {
+            // Video has missing data - we have to download it again
+            new VideoUrlLoader(this, new VideoUrlLoader.ShowDetailsLoader() {
+                @Override
+                public void onVideoInfoLoaded() {
+                    onFragmentPlayPauseInternal(show, position, playPause);
+                }
+
+                @Override
+                public void onVideoInfoLoadingError(final Throwable t) {
+                    Toast.makeText(PlaybackOverlayActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }).loadVideoUrl(show);
+        } else {
+            onFragmentPlayPauseInternal(show, position, playPause);
+        }
+    }
+
+    public void onFragmentPlayPauseInternal(Show show, int position, Boolean playPause) {
         //TODO:
         mVideoView.setVideoPath(show.videoUrl);
 
@@ -203,7 +224,6 @@ public class PlaybackOverlayActivity extends Activity implements
                 mPlaybackState = LeanbackPlaybackState.IDLE;
             }
         });
-
     }
 
     @Override
@@ -251,5 +271,6 @@ public class PlaybackOverlayActivity extends Activity implements
     }
 
     private class MediaSessionCallback extends MediaSession.Callback {
+
     }
 }
