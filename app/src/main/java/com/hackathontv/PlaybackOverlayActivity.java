@@ -15,6 +15,7 @@
 package com.hackathontv;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadata;
 import android.media.MediaPlayer;
@@ -22,12 +23,16 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.KeyEvent;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+
+import java.util.List;
 
 /**
  * PlaybackOverlayActivity for video playback that loads PlaybackOverlayFragment
@@ -63,10 +68,51 @@ public class PlaybackOverlayActivity extends Activity implements
         mVideoView.suspend();
     }
 
+    private static final int SPEECH_REQUEST_CODE = 0;
+
+    @Override
+    public boolean onSearchRequested() {
+        displaySpeechRecognizer();
+        return true;
+    }
+
+    private void displaySpeechRecognizer() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        // Start the activity, the intent will be populated with the speech text
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if(isSearchingForSong(results.get(0))) {
+                getCurrentlyPlayingSong();
+            } else {
+                Toast.makeText(getApplicationContext(), "Not searching for a song :D", Toast.LENGTH_SHORT).show();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected boolean isSearchingForSong(String input) {
+        if(input.contains("song")) return true;
+        else return false;
+    }
+
+    protected void getCurrentlyPlayingSong() {
+        int currentPosition = mVideoView.getCurrentPosition()/1000;
+        Toast.makeText(getApplicationContext(), "Position: " + currentPosition + "\nArtist: Random Artist\nTitle: Random Song", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         PlaybackOverlayFragment playbackOverlayFragment = (PlaybackOverlayFragment) getFragmentManager().findFragmentById(R.id.playback_controls_fragment);
         switch (keyCode) {
+            /*case KeyEvent.KEYCODE_DPAD_UP:
+                displaySpeechRecognizer();
+                return true;*/
             case KeyEvent.KEYCODE_MEDIA_PLAY:
                 playbackOverlayFragment.togglePlayback(false);
                 return true;
