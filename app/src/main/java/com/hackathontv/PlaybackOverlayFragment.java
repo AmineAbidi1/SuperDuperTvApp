@@ -114,7 +114,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
         for (int j = 0; j < shows.size(); j++) {
             mItems.add(shows.get(j));
-            if (mSelectedShow.localTitle.contentEquals(shows.get(j).localTitle)) {
+            if (mSelectedShow != null && mSelectedShow.localTitle.contentEquals(shows.get(j).localTitle)) {
                 mCurrentItem = j;
             }
         }
@@ -223,7 +223,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 //            mmr.setDataSource(movie.getVideoUrl());
         }
         String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long duration = Long.parseLong(time);
+        long duration = time == null ? 0 : Long.parseLong(time);
         return (int) duration;
     }
 

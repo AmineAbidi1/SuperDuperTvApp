@@ -1,6 +1,7 @@
 package com.hackathontv.model.show;
 
 import com.google.gson.annotations.SerializedName;
+import com.hackathontv.model.Image;
 
 import java.io.Serializable;
 
@@ -12,13 +13,16 @@ public class Show implements Serializable {
     public String tags;
     @SerializedName("original_title")
     public String originalTitle;
+    @SerializedName("franchise_id")
     public long franchiseId;
+    @SerializedName("season_id")
     public long seasonId;
     public long id;
     public int numberInSeries;
     public int numberInSeason;
     public long seriesId;
     public String identifier;
+    @SerializedName("local_title")
     public String localTitle;
     @SerializedName("local_short_description")
     public String localShortDescription;
@@ -27,6 +31,7 @@ public class Show implements Serializable {
     public String seriesCategory;
     public Season season;
     public ParentalRating parentalRating;
+    @SerializedName("local_playlist_item")
     public LocalPlaylistsItem[] localPlaylists;
     public String publishedFrom;
     public String publishedUntil;
