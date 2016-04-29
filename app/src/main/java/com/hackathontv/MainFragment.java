@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
+import android.support.v17.leanback.app.HeadersFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ImageCardView;
@@ -41,7 +42,9 @@ import android.support.v17.leanback.widget.OnItemViewSelectedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
+import android.support.v17.leanback.widget.VerticalGridView;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -96,6 +99,7 @@ public class MainFragment extends BrowseFragment {
 
         setupEventListeners();
     }
+
 
     @Override
     public void onDestroy() {
@@ -159,9 +163,12 @@ public class MainFragment extends BrowseFragment {
         setHeadersTransitionOnBackEnabled(true);
 
         // set fastLane (or headers) background color
-        setBrandColor(getResources().getColor(R.color.fastlane_background));
+        setBrandColor(ContextCompat.getColor(getContext(), R.color.selected_background));
+
+        //LOGO:
+ //       setBadgeDrawable(ContextCompat.getDrawable(getContext(), R.drawable.fire));
         // set search icon color
-        setSearchAffordanceColor(getResources().getColor(R.color.search_opaque));
+        setSearchAffordanceColor(ContextCompat.getColor(getContext(), R.color.search_opaque));
     }
 
     private void setupEventListeners() {

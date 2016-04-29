@@ -19,10 +19,13 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hackathontv.cache.EpisodeCache;
+import com.hackathontv.dialog.HowToRoastDialog;
+import com.hackathontv.model.VideoInfo;
 import com.hackathontv.model.show.Show;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.DetailsFragment;
@@ -41,6 +44,7 @@ import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
 import android.support.v17.leanback.widget.RowPresenter;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
@@ -61,6 +65,8 @@ public class VideoDetailsFragment extends DetailsFragment {
     private static final int ACTION_RENT = 2;
 
     private static final int ACTION_BUY = 3;
+
+    private static final int HOW_TO_ROAST = 4;
 
     private static final int DETAIL_THUMB_WIDTH = 274;
 
@@ -132,6 +138,7 @@ public class VideoDetailsFragment extends DetailsFragment {
                     public void onResourceReady(GlideDrawable resource,
                             GlideAnimation<? super GlideDrawable> glideAnimation) {
                         mBackgroundManager.setDrawable(resource);
+
                     }
                 });
     }
@@ -160,17 +167,18 @@ public class VideoDetailsFragment extends DetailsFragment {
                             GlideAnimation<? super GlideDrawable>
                                     glideAnimation) {
                         Log.d(TAG, "details overview card image url ready: " + resource);
-                        row.setImageDrawable(resource);
+                        Drawable[] layers = new Drawable[2];
+                        layers[0] = resource;
+                        layers[1] = ContextCompat.getDrawable(getContext(), R.drawable.double_tap);
+                        LayerDrawable layerDrawable = new LayerDrawable(layers);
+                        row.setImageDrawable(layerDrawable);
                         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
                     }
                 });
 
         row.addAction(new Action(ACTION_WATCH_TRAILER, getResources().getString(
-                R.string.watch_trailer_1), getResources().getString(R.string.watch_trailer_2)));
-        row.addAction(new Action(ACTION_RENT, getResources().getString(R.string.rent_1),
-                getResources().getString(R.string.rent_2)));
-        row.addAction(new Action(ACTION_BUY, getResources().getString(R.string.buy_1),
-                getResources().getString(R.string.buy_2)));
+                R.string.watch_video), "" ));
+        row.addAction(new Action(HOW_TO_ROAST, "How to roast"));
 
         mAdapter.add(row);
     }
@@ -193,6 +201,9 @@ public class VideoDetailsFragment extends DetailsFragment {
                     Intent intent = new Intent(getActivity(), PlaybackOverlayActivity.class);
                     intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
                     startActivity(intent);
+                } else if (action.getId() == HOW_TO_ROAST) {
+                    HowToRoastDialog howToRoastDialog = new HowToRoastDialog();
+                    howToRoastDialog.show(getFragmentManager(), HowToRoastDialog.TAG);
                 } else {
                     Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
                 }
