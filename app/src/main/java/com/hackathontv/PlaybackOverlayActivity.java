@@ -16,6 +16,7 @@ package com.hackathontv;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hackathontv.model.show.Show;
 
@@ -29,22 +30,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.StringLoader;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.hackathontv.model.show.Show;
 
 /**
  * PlaybackOverlayActivity for video playback that loads PlaybackOverlayFragment
@@ -211,7 +203,7 @@ public class PlaybackOverlayActivity extends Activity implements
         }
     }
 
-    public void onFragmentPlayPauseInternal(Show show, int position, Boolean playPause) {
+    public void onFragmentPlayPauseInternal(final Show show, int position, Boolean playPause) {
         //TODO:
         mVideoView.setVideoPath(show.videoUrl);
 
