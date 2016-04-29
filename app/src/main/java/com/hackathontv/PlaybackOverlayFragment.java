@@ -51,6 +51,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.cache.EpisodeCache;
+import com.hackathontv.cache.SeriesCache;
+import com.hackathontv.model.show.Show;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,32 +89,32 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     private SkipNextAction mSkipNextAction;
     private SkipPreviousAction mSkipPreviousAction;
     private PlaybackControlsRow mPlaybackControlsRow;
-    private ArrayList<Movie> mItems = new ArrayList<Movie>();
+    private ArrayList<Show> mItems = new ArrayList<Show>();
     private int mCurrentItem;
     private Handler mHandler;
     private Runnable mRunnable;
-    private Movie mSelectedMovie;
+    private Show mSelectedShow;
 
     private OnPlayPauseClickedListener mCallback;
 
     // Container Activity must implement this interface
     public interface OnPlayPauseClickedListener {
-        void onFragmentPlayPause(Movie movie, int position, Boolean playPause);
+        void onFragmentPlayPause(Show movie, int position, Boolean playPause);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItems = new ArrayList<Movie>();
-        mSelectedMovie = (Movie) getActivity()
+        mItems = new ArrayList<Show>();
+        mSelectedShow = (Show) getActivity()
                 .getIntent().getSerializableExtra(DetailsActivity.MOVIE);
 
-        List<Movie> movies = MovieList.list;
+        List<Show> shows = EpisodeCache.getInstance().getEpisodeList((int) mSelectedShow.franchiseId);
 
-        for (int j = 0; j < movies.size(); j++) {
-            mItems.add(movies.get(j));
-            if (mSelectedMovie.getTitle().contentEquals(movies.get(j).getTitle())) {
+        for (int j = 0; j < shows.size(); j++) {
+            mItems.add(shows.get(j));
+            if (mSelectedShow.localTitle.contentEquals(shows.get(j).localTitle)) {
                 mCurrentItem = j;
             }
         }
@@ -211,12 +214,13 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     }
 
     private int getDuration() {
-        Movie movie = mItems.get(mCurrentItem);
+        //TODO:
+        Show movie = mItems.get(mCurrentItem);
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            mmr.setDataSource(movie.getVideoUrl(), new HashMap<String, String>());
+//            mmr.setDataSource(movie.getVideoUrl(), new HashMap<String, String>());
         } else {
-            mmr.setDataSource(movie.getVideoUrl());
+//            mmr.setDataSource(movie.getVideoUrl());
         }
         String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         long duration = Long.parseLong(time);
@@ -225,7 +229,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
     private void addPlaybackControlsRow() {
         if (SHOW_DETAIL) {
-            mPlaybackControlsRow = new PlaybackControlsRow(mSelectedMovie);
+            mPlaybackControlsRow = new PlaybackControlsRow(mSelectedShow);
         } else {
             mPlaybackControlsRow = new PlaybackControlsRow();
         }
@@ -290,12 +294,12 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
     private void updatePlaybackRow(int index) {
         if (mPlaybackControlsRow.getItem() != null) {
-            Movie item = (Movie) mPlaybackControlsRow.getItem();
-            item.setTitle(mItems.get(mCurrentItem).getTitle());
-            item.setStudio(mItems.get(mCurrentItem).getStudio());
+            Show item = (Show) mPlaybackControlsRow.getItem();
+            item.localTitle = mItems.get(mCurrentItem).localTitle;
+//            item.setStudio(mItems.get(mCurrentItem).getStudio());
         }
         if (SHOW_IMAGE) {
-            updateVideoImage(mItems.get(mCurrentItem).getCardImageURI().toString());
+            updateVideoImage(mItems.get(mCurrentItem).image.getCardImageUrl().toString());
         }
         mRowsAdapter.notifyArrayItemRangeChanged(0, 1);
         mPlaybackControlsRow.setTotalTime(getDuration());
@@ -305,7 +309,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
     private void addOtherRows() {
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-        for (Movie movie : mItems) {
+        for (Show movie : mItems) {
             listRowAdapter.add(movie);
         }
             HeaderItem header = new HeaderItem(0, getString(R.string.related_movies));
@@ -379,8 +383,8 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     static class DescriptionPresenter extends AbstractDetailsDescriptionPresenter {
         @Override
         protected void onBindDescription(ViewHolder viewHolder, Object item) {
-            viewHolder.getTitle().setText(((Movie) item).getTitle());
-            viewHolder.getSubtitle().setText(((Movie) item).getStudio());
+            viewHolder.getTitle().setText(((Show) item).originalTitle);
+//            viewHolder.getSubtitle().setText(((Show) item).getStudio());
         }
     }
 

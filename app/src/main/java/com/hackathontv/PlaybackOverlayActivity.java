@@ -28,6 +28,7 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.model.show.Show;
 
 /**
  * PlaybackOverlayActivity for video playback that loads PlaybackOverlayFragment
@@ -88,8 +89,9 @@ public class PlaybackOverlayActivity extends Activity implements
     /**
      * Implementation of OnPlayPauseClickedListener
      */
-    public void onFragmentPlayPause(Movie movie, int position, Boolean playPause) {
-        mVideoView.setVideoPath(movie.getVideoUrl());
+    public void onFragmentPlayPause(Show show, int position, Boolean playPause) {
+        //TODO:
+//        mVideoView.setVideoPath(show.getVideoUrl());
 
         if (position == 0 || mPlaybackState == LeanbackPlaybackState.IDLE) {
             setupCallbacks();
@@ -107,7 +109,7 @@ public class PlaybackOverlayActivity extends Activity implements
             mVideoView.pause();
         }
         updatePlaybackState(position);
-        updateMetadata(movie);
+        updateMetadata(show);
     }
 
     private void updatePlaybackState(int position) {
@@ -133,23 +135,23 @@ public class PlaybackOverlayActivity extends Activity implements
         return actions;
     }
 
-    private void updateMetadata(final Movie movie) {
+    private void updateMetadata(final Show show) {
         final MediaMetadata.Builder metadataBuilder = new MediaMetadata.Builder();
 
-        String title = movie.getTitle().replace("_", " -");
+        String title = show.originalTitle.replace("_", " -");
 
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE, title);
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE,
-                movie.getDescription());
+                show.localLongDescription);
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI,
-                movie.getCardImageUrl());
+                show.image.getCardImageUrl());
 
         // And at minimum the title and artist for legacy support
         metadataBuilder.putString(MediaMetadata.METADATA_KEY_TITLE, title);
-        metadataBuilder.putString(MediaMetadata.METADATA_KEY_ARTIST, movie.getStudio());
+        metadataBuilder.putString(MediaMetadata.METADATA_KEY_ARTIST, show.tags);
 
         Glide.with(this)
-                .load(Uri.parse(movie.getCardImageUrl()))
+                .load(Uri.parse(show.image.get500x500Url()))
                 .asBitmap()
                 .into(new SimpleTarget<Bitmap>(500, 500) {
                     @Override

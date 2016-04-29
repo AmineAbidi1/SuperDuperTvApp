@@ -16,16 +16,18 @@ package com.hackathontv;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
+import com.hackathontv.model.show.Show;
+
 public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        Movie movie = (Movie) item;
+        Show movie = (Show) item;
 
         if (movie != null) {
-            viewHolder.getTitle().setText(movie.getTitle());
-            viewHolder.getSubtitle().setText(movie.getStudio());
-            viewHolder.getBody().setText(movie.getDescription());
+            viewHolder.getTitle().setText(movie.originalTitle);
+            viewHolder.getSubtitle().setText(movie.localShortDescription);
+            viewHolder.getBody().setText(movie.localLongDescription);
         }
     }
 }

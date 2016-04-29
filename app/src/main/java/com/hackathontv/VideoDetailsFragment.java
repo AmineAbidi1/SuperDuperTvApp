@@ -42,6 +42,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.model.show.Show;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +63,7 @@ public class VideoDetailsFragment extends DetailsFragment {
 
     private static final int NUM_COLS = 10;
 
-    private Movie mSelectedMovie;
+    private Show mSelectedMovie;
 
     private ArrayObjectAdapter mAdapter;
     private ClassPresenterSelector mPresenterSelector;
@@ -78,7 +79,7 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         prepareBackgroundManager();
 
-        mSelectedMovie = (Movie) getActivity().getIntent()
+        mSelectedMovie = (Show) getActivity().getIntent()
                 .getSerializableExtra(DetailsActivity.MOVIE);
         if (mSelectedMovie != null) {
             setupAdapter();
@@ -86,7 +87,7 @@ public class VideoDetailsFragment extends DetailsFragment {
             setupDetailsOverviewRowPresenter();
             setupMovieListRow();
             setupMovieListRowPresenter();
-            updateBackground(mSelectedMovie.getBackgroundImageUrl());
+            updateBackground(mSelectedMovie.image.get500x500Url());
             setOnItemViewClickedListener(new ItemViewClickedListener());
         } else {
             Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -136,7 +137,7 @@ public class VideoDetailsFragment extends DetailsFragment {
         int height = Utils.convertDpToPixel(getActivity()
                 .getApplicationContext(), DETAIL_THUMB_HEIGHT);
         Glide.with(getActivity())
-                .load(mSelectedMovie.getCardImageUrl())
+                .load(mSelectedMovie.image.getCardImageUrl())
                 .centerCrop()
                 .error(R.drawable.default_background)
                 .into(new SimpleTarget<GlideDrawable>(width, height) {
@@ -188,16 +189,17 @@ public class VideoDetailsFragment extends DetailsFragment {
 
     private void setupMovieListRow() {
         String subcategories[] = {getString(R.string.related_movies)};
-        List<Movie> list = MovieList.list;
+        //TODO:
+//        List<Show> list = Show.list;
 
-        Collections.shuffle(list);
-        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-        for (int j = 0; j < NUM_COLS; j++) {
-            listRowAdapter.add(list.get(j % 5));
-        }
+//        Collections.shuffle(list);
+//        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
+//        for (int j = 0; j < NUM_COLS; j++) {
+//            listRowAdapter.add(list.get(j % 5));
+//        }
 
-            HeaderItem header = new HeaderItem(0, subcategories[0]);
-        mAdapter.add(new ListRow(header, listRowAdapter));
+//            HeaderItem header = new HeaderItem(0, subcategories[0]);
+//        mAdapter.add(new ListRow(header, listRowAdapter));
     }
 
     private void setupMovieListRowPresenter() {
@@ -209,8 +211,8 @@ public class VideoDetailsFragment extends DetailsFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof Movie) {
-                Movie movie = (Movie) item;
+            if (item instanceof Show) {
+                Show movie = (Show) item;
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra(getResources().getString(R.string.movie), mSelectedMovie);

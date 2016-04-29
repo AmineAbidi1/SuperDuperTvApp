@@ -85,17 +85,6 @@ public class CardPresenter extends Presenter {
                     .load(cardImageUrl)
                     .centerCrop()
                     .error(mDefaultCardImage)
-                    .listener(new RequestListener<String, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            return false;
-                        }
-                    })
                     .into(cardView.getMainImageView());
         }
     }
