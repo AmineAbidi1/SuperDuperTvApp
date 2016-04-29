@@ -169,6 +169,8 @@ public class PlaybackOverlayActivity extends Activity implements
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container);
         final ImageView imageView = new ImageView(this);
 
+        imageView.setAlpha(0.8f);
+
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageView);
         Glide.with(this).load(R.raw.fire).into(imageViewTarget);
 
