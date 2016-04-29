@@ -15,6 +15,7 @@
 package com.hackathontv;
 
 import com.hackathontv.model.Feed;
+import com.hackathontv.model.show.Show;
 import com.hackathontv.network.RestApi;
 
 import android.app.Activity;
@@ -43,6 +44,21 @@ public class MainActivity extends Activity {
         RestApi restApi = new RestApi();
         Call<List<Feed>> seriesList = restApi.getFranchisesList();
         seriesList.enqueue(new SeriesListCallback());
+
+        restApi.getShowDetails(977).enqueue(new EpisodeListCallback());
+    }
+
+    private static class EpisodeListCallback implements Callback<List<Show>> {
+
+        @Override
+        public void onResponse(final Call<List<Show>> call, final Response<List<Show>> response) {
+
+        }
+
+        @Override
+        public void onFailure(final Call<List<Show>> call, final Throwable t) {
+
+        }
     }
 
     private static class SeriesListCallback implements Callback<List<Feed>> {

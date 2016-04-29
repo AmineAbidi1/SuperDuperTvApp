@@ -3,6 +3,7 @@ package com.hackathontv.network;
 import com.google.gson.Gson;
 
 import com.hackathontv.model.Feed;
+import com.hackathontv.model.show.Show;
 
 import java.util.List;
 
@@ -22,6 +23,10 @@ public class RestApi {
 
     public Call<List<Feed>> getFranchisesList() {
         return mApiService.getFranchisesList("en");
+    }
+
+    public Call<List<Show>> getShowDetails(final int showId){
+        return mApiService.getEpisodeList("en", showId);
     }
 
     protected ApiService createApiService() {
