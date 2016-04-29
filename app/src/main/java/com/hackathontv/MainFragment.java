@@ -191,6 +191,7 @@ public class MainFragment extends BrowseFragment {
                     public void onVideoInfoLoaded(final VideoInfo videoInfo) {
 
                         movie.videoUrl = videoInfo.src;
+                        movie.duration = videoInfo.duration;
                         Log.d(TAG, "Item: " + item.toString());
                         Intent intent = new Intent(getActivity(), DetailsActivity.class);
                         intent.putExtra(DetailsActivity.MOVIE, movie);

@@ -73,6 +73,8 @@ public class Show implements Serializable {
     public Image image;
     public String videoUrl;
 
+    public double duration;
+
     public LocalPlaylistsItem getCorrectPlayList() {
         if (localPlaylists == null || localPlaylists.length == 0) {
             return null;

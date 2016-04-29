@@ -19,7 +19,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hackathontv.cache.EpisodeCache;
-import com.hackathontv.model.VideoInfo;
 import com.hackathontv.model.show.Show;
 
 import android.content.Intent;
@@ -82,7 +81,7 @@ public class VideoDetailsFragment extends DetailsFragment {
     private DisplayMetrics mMetrics;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         Log.d(TAG, "onCreate DetailsFragment");
         super.onCreate(savedInstanceState);
 
@@ -92,8 +91,7 @@ public class VideoDetailsFragment extends DetailsFragment {
                 .getSerializableExtra(DetailsActivity.MOVIE);
 
         if (mSelectedMovie != null) {
-//            loadAndShowDetailsIfReady();
-            onVideoInfoLoaded(null);
+            setupData();
         } else {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
@@ -101,8 +99,7 @@ public class VideoDetailsFragment extends DetailsFragment {
     }
 
 
-    void onVideoInfoLoaded(final VideoInfo videoInfo) {
-//        mSelectedMovie.videoUrl = videoInfo.src;
+    void setupData() {
         setupAdapter();
         setupDetailsOverviewRow();
         setupDetailsOverviewRowPresenter();
@@ -110,10 +107,6 @@ public class VideoDetailsFragment extends DetailsFragment {
         setupMovieListRowPresenter();
         updateBackground(mSelectedMovie.image.get500x500Url());
         setOnItemViewClickedListener(new ItemViewClickedListener());
-    }
-
-    void onVideoInfoLoadingError(Throwable t) {
-        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -249,6 +242,4 @@ public class VideoDetailsFragment extends DetailsFragment {
             }
         }
     }
-
-
 }

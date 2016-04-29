@@ -7,7 +7,7 @@ public class VideoInfo {
     @SerializedName("riptide_id")
     public String riptideId;
 
-    public String duration;
+    public double duration;
 
     public String src;
 }
