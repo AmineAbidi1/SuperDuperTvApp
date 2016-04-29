@@ -1,5 +1,7 @@
 package com.hackathontv.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Author: GrzegorzDec
  * Created by: ModelGenerator on 29/04/16
@@ -7,6 +9,7 @@ package com.hackathontv.model;
 public class Feed {
     public long id;
     public String identifier;
+    @SerializedName("original_name")
     public String originalName;
     public long originalBrandId;
     public String originalLanguageCode;

@@ -1,11 +1,14 @@
 package com.hackathontv.model.show;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Author: GrzegorzDec
  * Created by: ModelGenerator on 29/04/16
  */
 public class Show {
     public String tags;
+    @SerializedName("original_title")
     public String originalTitle;
     public long franchiseId;
     public long seasonId;
@@ -15,6 +18,7 @@ public class Show {
     public long seriesId;
     public String identifier;
     public String localTitle;
+    @SerializedName("local_short_description")
     public String localShortDescription;
     public String localLongDescription;
     public String seriesCategory;
@@ -31,4 +35,8 @@ public class Show {
     public String vodPortraitImage;
     public String vodSquareImage;
     public Image image;
+
+    public Object getCardImageUrl() {
+        return "https://images.mtvnn.com/" + image.riptideImageId + "200x200";
+    }
 }

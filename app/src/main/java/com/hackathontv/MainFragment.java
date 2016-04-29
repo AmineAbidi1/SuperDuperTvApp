@@ -50,6 +50,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.cache.EpisodeCache;
+import com.hackathontv.cache.SeriesCache;
+import com.hackathontv.model.Feed;
+import com.hackathontv.model.show.Show;
 
 public class MainFragment extends BrowseFragment {
     private static final String TAG = "MainFragment";
@@ -92,21 +96,22 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void loadRows() {
-        List<Movie> list = MovieList.setupMovies();
-
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         CardPresenter cardPresenter = new CardPresenter();
 
         int i;
-        for (i = 0; i < NUM_ROWS; i++) {
-            if (i != 0) {
-                Collections.shuffle(list);
-            }
+        final List<Feed> seriesList = SeriesCache.getInstance().getSeriesList();
+        final EpisodeCache episodeCache = EpisodeCache.getInstance();
+        for (i=0; i < seriesList.size(); i++) {
+            final List<Show> episodeList = episodeCache.getEpisodeList((int) seriesList.get(i).id);
+//            if (i != 0) {
+//                Collections.shuffle(seriesList);
+//            }
             ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
-            for (int j = 0; j < NUM_COLS; j++) {
-                listRowAdapter.add(list.get(j % 5));
+            for (int j = 0; j < episodeList.size(); j++) {
+                listRowAdapter.add(episodeList.get(j));
             }
-                HeaderItem header = new HeaderItem(i, MovieList.MOVIE_CATEGORY[i]);
+                HeaderItem header = new HeaderItem(i, seriesList.get(i).originalName);
             mRowsAdapter.add(new ListRow(header, listRowAdapter));
         }
 

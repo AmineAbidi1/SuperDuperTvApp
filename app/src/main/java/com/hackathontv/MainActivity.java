@@ -14,6 +14,7 @@
 
 package com.hackathontv;
 
+import com.hackathontv.cache.SeriesCache;
 import com.hackathontv.model.Feed;
 import com.hackathontv.model.show.Show;
 import com.hackathontv.network.RestApi;
@@ -40,37 +41,7 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        RestApi restApi = new RestApi();
-        Call<List<Feed>> seriesList = restApi.getFranchisesList();
-        seriesList.enqueue(new SeriesListCallback());
-
-        restApi.getShowDetails(977).enqueue(new EpisodeListCallback());
     }
 
-    private static class EpisodeListCallback implements Callback<List<Show>> {
 
-        @Override
-        public void onResponse(final Call<List<Show>> call, final Response<List<Show>> response) {
-
-        }
-
-        @Override
-        public void onFailure(final Call<List<Show>> call, final Throwable t) {
-
-        }
-    }
-
-    private static class SeriesListCallback implements Callback<List<Feed>> {
-
-        @Override
-        public void onResponse(final Call<List<Feed>> call, final Response<List<Feed>> response) {
-
-        }
-
-        @Override
-        public void onFailure(final Call<List<Feed>> call, final Throwable t) {
-
-        }
-    }
 }
