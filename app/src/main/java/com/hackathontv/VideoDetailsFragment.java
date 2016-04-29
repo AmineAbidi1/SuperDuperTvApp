@@ -42,6 +42,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.cache.EpisodeCache;
 import com.hackathontv.model.show.Show;
 
 import java.util.Collections;
@@ -189,17 +190,17 @@ public class VideoDetailsFragment extends DetailsFragment {
 
     private void setupMovieListRow() {
         String subcategories[] = {getString(R.string.related_movies)};
-        //TODO:
-//        List<Show> list = Show.list;
 
-//        Collections.shuffle(list);
-//        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
-//        for (int j = 0; j < NUM_COLS; j++) {
-//            listRowAdapter.add(list.get(j % 5));
-//        }
+        List<Show> list = EpisodeCache.getInstance().getEpisodeList((int) mSelectedMovie.franchiseId);
 
-//            HeaderItem header = new HeaderItem(0, subcategories[0]);
-//        mAdapter.add(new ListRow(header, listRowAdapter));
+        Collections.shuffle(list);
+        ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
+        for (int j = 0; j < list.size(); j++) {
+            listRowAdapter.add(list.get(j % 5));
+        }
+
+            HeaderItem header = new HeaderItem(0, subcategories[0]);
+        mAdapter.add(new ListRow(header, listRowAdapter));
     }
 
     private void setupMovieListRowPresenter() {
@@ -215,7 +216,7 @@ public class VideoDetailsFragment extends DetailsFragment {
                 Show movie = (Show) item;
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(getResources().getString(R.string.movie), mSelectedMovie);
+                intent.putExtra(getResources().getString(R.string.movie), movie);
                 intent.putExtra(getResources().getString(R.string.should_start), true);
                 startActivity(intent);
 

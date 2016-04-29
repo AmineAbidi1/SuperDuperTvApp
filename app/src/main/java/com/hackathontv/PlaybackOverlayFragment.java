@@ -296,10 +296,10 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         if (mPlaybackControlsRow.getItem() != null) {
             Show item = (Show) mPlaybackControlsRow.getItem();
             item.localTitle = mItems.get(mCurrentItem).localTitle;
-//            item.setStudio(mItems.get(mCurrentItem).getStudio());
+            item.localShortDescription = mItems.get(mCurrentItem).localShortDescription;
         }
         if (SHOW_IMAGE) {
-            updateVideoImage(mItems.get(mCurrentItem).image.getCardImageUrl().toString());
+            updateVideoImage(mItems.get(mCurrentItem).image.getCardImageUrl());
         }
         mRowsAdapter.notifyArrayItemRangeChanged(0, 1);
         mPlaybackControlsRow.setTotalTime(getDuration());
