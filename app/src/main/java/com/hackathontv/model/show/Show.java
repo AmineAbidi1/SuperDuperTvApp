@@ -36,8 +36,4 @@ public class Show {
     public String vodSquareImage;
     public Image image;
 
-    public Object getCardImageUrl() {
-        return "https://images.mtvnn.com/" + image.riptideImageId + "/200x200";
-    }
-
 }

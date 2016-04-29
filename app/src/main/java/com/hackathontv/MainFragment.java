@@ -107,12 +107,15 @@ public class MainFragment extends BrowseFragment {
 //            if (i != 0) {
 //                Collections.shuffle(seriesList);
 //            }
-            ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
-            for (int j = 0; j < episodeList.size(); j++) {
-                listRowAdapter.add(episodeList.get(j));
-            }
+            if(episodeList != null && !episodeList.isEmpty()) {
+                ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
+                for (int j = 0; j < episodeList.size(); j++) {
+                    listRowAdapter.add(episodeList.get(j));
+                }
+
                 HeaderItem header = new HeaderItem(i, seriesList.get(i).originalName);
-            mRowsAdapter.add(new ListRow(header, listRowAdapter));
+                mRowsAdapter.add(new ListRow(header, listRowAdapter));
+            }
         }
 
             HeaderItem gridHeader = new HeaderItem(i, "PREFERENCES");
