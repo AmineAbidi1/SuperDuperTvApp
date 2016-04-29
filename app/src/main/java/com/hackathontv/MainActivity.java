@@ -14,13 +14,24 @@
 
 package com.hackathontv;
 
+import com.hackathontv.model.Series;
+import com.hackathontv.network.RestApi;
+
 import android.app.Activity;
 import android.os.Bundle;
+
+import java.io.IOException;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /*
  * MainActivity class that loads MainFragment
  */
 public class MainActivity extends Activity {
+
     /**
      * Called when the activity is first created.
      */
@@ -29,5 +40,22 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        RestApi restApi = new RestApi();
+        Call<List<Series>> seriesList = restApi.getSeriesList();
+        seriesList.enqueue(new SeriesListCallback());
+    }
+
+    private static class SeriesListCallback implements Callback<List<Series>> {
+
+        @Override
+        public void onResponse(final Call<List<Series>> call, final Response<List<Series>> response) {
+
+        }
+
+        @Override
+        public void onFailure(final Call<List<Series>> call, final Throwable t) {
+
+        }
     }
 }
