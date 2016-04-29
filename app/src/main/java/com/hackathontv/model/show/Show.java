@@ -37,6 +37,7 @@ public class Show {
     public Image image;
 
     public Object getCardImageUrl() {
-        return "https://images.mtvnn.com/" + image.riptideImageId + "200x200";
+        return "https://images.mtvnn.com/" + image.riptideImageId + "/200x200";
     }
+
 }
