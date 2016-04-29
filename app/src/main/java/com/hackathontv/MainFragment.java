@@ -14,11 +14,15 @@
 
 package com.hackathontv;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.cache.EpisodeCache;
+import com.hackathontv.cache.SeriesCache;
+import com.hackathontv.model.Feed;
+import com.hackathontv.model.VideoInfo;
+import com.hackathontv.model.show.Show;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -46,30 +50,37 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.hackathontv.cache.EpisodeCache;
-import com.hackathontv.cache.SeriesCache;
-import com.hackathontv.model.Feed;
-import com.hackathontv.model.show.Show;
+import java.net.URI;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainFragment extends BrowseFragment {
+
     private static final String TAG = "MainFragment";
 
     private static final int BACKGROUND_UPDATE_DELAY = 300;
+
     private static final int GRID_ITEM_WIDTH = 200;
+
     private static final int GRID_ITEM_HEIGHT = 200;
+
     private static final int NUM_ROWS = 6;
+
     private static final int NUM_COLS = 15;
 
     private final Handler mHandler = new Handler();
+
     private ArrayObjectAdapter mRowsAdapter;
+
     private Drawable mDefaultBackground;
+
     private DisplayMetrics mMetrics;
+
     private Timer mBackgroundTimer;
+
     private URI mBackgroundURI;
+
     private BackgroundManager mBackgroundManager;
 
     @Override
@@ -102,12 +113,12 @@ public class MainFragment extends BrowseFragment {
         int i;
         final List<Feed> seriesList = SeriesCache.getInstance().getSeriesList();
         final EpisodeCache episodeCache = EpisodeCache.getInstance();
-        for (i=0; i < seriesList.size(); i++) {
+        for (i = 0; i < seriesList.size(); i++) {
             final List<Show> episodeList = episodeCache.getEpisodeList((int) seriesList.get(i).id);
-//            if (i != 0) {
-//                Collections.shuffle(seriesList);
-//            }
-            if(episodeList != null && !episodeList.isEmpty()) {
+            //            if (i != 0) {
+            //                Collections.shuffle(seriesList);
+            //            }
+            if (episodeList != null && !episodeList.isEmpty()) {
                 ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
                 for (int j = 0; j < episodeList.size(); j++) {
                     listRowAdapter.add(episodeList.get(j));
@@ -118,7 +129,7 @@ public class MainFragment extends BrowseFragment {
             }
         }
 
-            HeaderItem gridHeader = new HeaderItem(i, "PREFERENCES");
+        HeaderItem gridHeader = new HeaderItem(i, "PREFERENCES");
 
         GridItemPresenter mGridPresenter = new GridItemPresenter();
         ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
@@ -128,7 +139,6 @@ public class MainFragment extends BrowseFragment {
         mRowsAdapter.add(new ListRow(gridHeader, gridRowAdapter));
 
         setAdapter(mRowsAdapter);
-
     }
 
     private void prepareBackgroundManager() {
@@ -169,21 +179,34 @@ public class MainFragment extends BrowseFragment {
     }
 
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
+
         @Override
-        public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
-                                  RowPresenter.ViewHolder rowViewHolder, Row row) {
+        public void onItemClicked(final Presenter.ViewHolder itemViewHolder, final Object item,
+                RowPresenter.ViewHolder rowViewHolder, Row row) {
 
             if (item instanceof Show) {
-                Show movie = (Show) item;
-                Log.d(TAG, "Item: " + item.toString());
-                Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(DetailsActivity.MOVIE, movie);
+                final Show movie = (Show) item;
+                new VideoUrlLoader(getContext(), new VideoUrlLoader.ShowDetailsLoader() {
+                    @Override
+                    public void onVideoInfoLoaded(final VideoInfo videoInfo) {
 
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        getActivity(),
-                        ((ImageCardView) itemViewHolder.view).getMainImageView(),
-                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-                getActivity().startActivity(intent, bundle);
+                        movie.videoUrl = videoInfo.src;
+                        Log.d(TAG, "Item: " + item.toString());
+                        Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                        intent.putExtra(DetailsActivity.MOVIE, movie);
+
+                        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                getActivity(),
+                                ((ImageCardView) itemViewHolder.view).getMainImageView(),
+                                DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
+                        getActivity().startActivity(intent, bundle);
+                    }
+
+                    @Override
+                    public void onVideoInfoLoadingError(final Throwable t) {
+                        Toast.makeText(getContext(), "Error: " + t.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }).loadVideoUrl(movie);
             } else if (item instanceof String) {
                 if (((String) item).indexOf(getString(R.string.error_fragment)) >= 0) {
                     Intent intent = new Intent(getActivity(), BrowseErrorActivity.class);
@@ -197,14 +220,14 @@ public class MainFragment extends BrowseFragment {
     }
 
     private final class ItemViewSelectedListener implements OnItemViewSelectedListener {
+
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
-                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
+                RowPresenter.ViewHolder rowViewHolder, Row row) {
             if (item instanceof Show) {
                 mBackgroundURI = ((Show) item).image.getBackgroundImageURI();
                 startBackgroundTimer();
             }
-
         }
     }
 
@@ -218,8 +241,8 @@ public class MainFragment extends BrowseFragment {
                 .into(new SimpleTarget<GlideDrawable>(width, height) {
                     @Override
                     public void onResourceReady(GlideDrawable resource,
-                                                GlideAnimation<? super GlideDrawable>
-                                                        glideAnimation) {
+                            GlideAnimation<? super GlideDrawable>
+                                    glideAnimation) {
                         mBackgroundManager.setDrawable(resource);
                     }
                 });
@@ -246,11 +269,11 @@ public class MainFragment extends BrowseFragment {
                     }
                 }
             });
-
         }
     }
 
     private class GridItemPresenter extends Presenter {
+
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
             TextView view = new TextView(parent.getContext());
@@ -272,5 +295,4 @@ public class MainFragment extends BrowseFragment {
         public void onUnbindViewHolder(ViewHolder viewHolder) {
         }
     }
-
 }

@@ -14,9 +14,14 @@
 
 package com.hackathontv;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.cache.EpisodeCache;
+import com.hackathontv.model.show.Show;
+
 import android.content.Context;
-import android.media.MediaMetadataRetriever;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
@@ -47,16 +52,7 @@ import android.support.v17.leanback.widget.RowPresenter;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.hackathontv.cache.EpisodeCache;
-import com.hackathontv.cache.SeriesCache;
-import com.hackathontv.model.show.Show;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -215,7 +211,8 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
     private int getDuration() {
         //TODO:
-        Show movie = mItems.get(mCurrentItem);
+        return 0;
+/*        Show movie = mItems.get(mCurrentItem);
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             mmr.setDataSource(movie.videoUrl, new HashMap<String, String>());
@@ -224,7 +221,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         }
         String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         long duration = time == null ? 0 : Long.parseLong(time);
-        return (int) duration;
+        return (int) duration;*/
     }
 
     private void addPlaybackControlsRow() {

@@ -14,6 +14,14 @@
 
 package com.hackathontv;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.hackathontv.cache.EpisodeCache;
+import com.hackathontv.model.VideoInfo;
+import com.hackathontv.model.show.Show;
+
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -38,13 +46,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.hackathontv.cache.EpisodeCache;
-import com.hackathontv.model.show.Show;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -53,13 +54,17 @@ import java.util.List;
  * It shows a detailed view of video and its meta plus related videos.
  */
 public class VideoDetailsFragment extends DetailsFragment {
+
     private static final String TAG = "VideoDetailsFragment";
 
     private static final int ACTION_WATCH_TRAILER = 1;
+
     private static final int ACTION_RENT = 2;
+
     private static final int ACTION_BUY = 3;
 
     private static final int DETAIL_THUMB_WIDTH = 274;
+
     private static final int DETAIL_THUMB_HEIGHT = 274;
 
     private static final int NUM_COLS = 10;
@@ -67,10 +72,13 @@ public class VideoDetailsFragment extends DetailsFragment {
     private Show mSelectedMovie;
 
     private ArrayObjectAdapter mAdapter;
+
     private ClassPresenterSelector mPresenterSelector;
 
     private BackgroundManager mBackgroundManager;
+
     private Drawable mDefaultBackground;
+
     private DisplayMetrics mMetrics;
 
     @Override
@@ -82,18 +90,30 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         mSelectedMovie = (Show) getActivity().getIntent()
                 .getSerializableExtra(DetailsActivity.MOVIE);
+
         if (mSelectedMovie != null) {
-            setupAdapter();
-            setupDetailsOverviewRow();
-            setupDetailsOverviewRowPresenter();
-            setupMovieListRow();
-            setupMovieListRowPresenter();
-            updateBackground(mSelectedMovie.image.get500x500Url());
-            setOnItemViewClickedListener(new ItemViewClickedListener());
+//            loadAndShowDetailsIfReady();
+            onVideoInfoLoaded(null);
         } else {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         }
+    }
+
+
+    void onVideoInfoLoaded(final VideoInfo videoInfo) {
+//        mSelectedMovie.videoUrl = videoInfo.src;
+        setupAdapter();
+        setupDetailsOverviewRow();
+        setupDetailsOverviewRowPresenter();
+        setupMovieListRow();
+        setupMovieListRowPresenter();
+        updateBackground(mSelectedMovie.image.get500x500Url());
+        setOnItemViewClickedListener(new ItemViewClickedListener());
+    }
+
+    void onVideoInfoLoadingError(Throwable t) {
+        Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -117,7 +137,7 @@ public class VideoDetailsFragment extends DetailsFragment {
                 .into(new SimpleTarget<GlideDrawable>(mMetrics.widthPixels, mMetrics.heightPixels) {
                     @Override
                     public void onResourceReady(GlideDrawable resource,
-                                                GlideAnimation<? super GlideDrawable> glideAnimation) {
+                            GlideAnimation<? super GlideDrawable> glideAnimation) {
                         mBackgroundManager.setDrawable(resource);
                     }
                 });
@@ -144,8 +164,8 @@ public class VideoDetailsFragment extends DetailsFragment {
                 .into(new SimpleTarget<GlideDrawable>(width, height) {
                     @Override
                     public void onResourceReady(GlideDrawable resource,
-                                                GlideAnimation<? super GlideDrawable>
-                                                        glideAnimation) {
+                            GlideAnimation<? super GlideDrawable>
+                                    glideAnimation) {
                         Log.d(TAG, "details overview card image url ready: " + resource);
                         row.setImageDrawable(resource);
                         mAdapter.notifyArrayItemRangeChanged(0, mAdapter.size());
@@ -199,7 +219,7 @@ public class VideoDetailsFragment extends DetailsFragment {
             listRowAdapter.add(list.get(j % 5));
         }
 
-            HeaderItem header = new HeaderItem(0, subcategories[0]);
+        HeaderItem header = new HeaderItem(0, subcategories[0]);
         mAdapter.add(new ListRow(header, listRowAdapter));
     }
 
@@ -208,9 +228,10 @@ public class VideoDetailsFragment extends DetailsFragment {
     }
 
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
+
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
-                                  RowPresenter.ViewHolder rowViewHolder, Row row) {
+                RowPresenter.ViewHolder rowViewHolder, Row row) {
 
             if (item instanceof Show) {
                 Show movie = (Show) item;
@@ -220,7 +241,6 @@ public class VideoDetailsFragment extends DetailsFragment {
                 intent.putExtra(getResources().getString(R.string.should_start), true);
                 startActivity(intent);
 
-
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         getActivity(),
                         ((ImageCardView) itemViewHolder.view).getMainImageView(),
@@ -229,4 +249,6 @@ public class VideoDetailsFragment extends DetailsFragment {
             }
         }
     }
+
+
 }

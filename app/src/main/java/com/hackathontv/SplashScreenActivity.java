@@ -1,15 +1,15 @@
 package com.hackathontv;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-
 import com.hackathontv.cache.EpisodeCache;
 import com.hackathontv.cache.SeriesCache;
 import com.hackathontv.model.Feed;
 import com.hackathontv.model.show.Show;
 import com.hackathontv.network.RestApi;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 
 import java.util.List;
 
