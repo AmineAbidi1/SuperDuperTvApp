@@ -129,7 +129,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //        mPlaybackControlsRow.
         mItems = new ArrayList<Show>();
         mSelectedShow = (Show) getActivity()
                 .getIntent().getSerializableExtra(DetailsActivity.MOVIE);
@@ -164,6 +164,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
                 Log.i(TAG, "onItemClicked: " + item + " row " + row);
             }
         });
+
     }
 
 

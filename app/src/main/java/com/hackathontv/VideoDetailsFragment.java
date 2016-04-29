@@ -20,7 +20,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hackathontv.cache.EpisodeCache;
 import com.hackathontv.dialog.HowToRoastDialog;
-import com.hackathontv.model.VideoInfo;
 import com.hackathontv.model.show.Show;
 
 import android.content.Intent;
