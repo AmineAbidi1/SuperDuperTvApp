@@ -169,10 +169,10 @@ public class PlaybackOverlayActivity extends Activity implements
         final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.container);
         final ImageView imageView = new ImageView(this);
 
-        imageView.setAlpha(0.8f);
+        imageView.setAlpha(0.65f);
 
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageView);
-        Glide.with(this).load(R.raw.fire).into(imageViewTarget);
+        Glide.with(this).load(R.raw.flames).into(imageViewTarget);
 
         frameLayout.addView(imageView);
 
@@ -182,7 +182,7 @@ public class PlaybackOverlayActivity extends Activity implements
             public void run() {
                 frameLayout.removeView(imageView);
             }
-        }, 3000);
+        }, 2000);
     }
 
     public void onFragmentPlayPause(final Show show, final int position, final Boolean playPause) {
