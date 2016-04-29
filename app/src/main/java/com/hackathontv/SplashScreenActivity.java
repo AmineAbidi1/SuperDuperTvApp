@@ -70,7 +70,6 @@ public class SplashScreenActivity extends Activity {
 
         private void downloadEpisodes(List<Feed> feeds) {
             RestApi restApi = new RestApi();
-
             for(Feed feed : feeds) {
                 restApi.getShowDetails((int) feed.id).enqueue(new EpisodeListCallback((int) feed.id));
             }

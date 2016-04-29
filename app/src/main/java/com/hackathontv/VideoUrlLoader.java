@@ -48,7 +48,9 @@ public class VideoUrlLoader {
                 restApid.getVideoInfo(riptideVideoId).enqueue(new Callback<VideoInfo>() {
                     @Override
                     public void onResponse(final Call<VideoInfo> call, final Response<VideoInfo> response) {
-                        loaderCallback.onVideoInfoLoaded(response.body());
+                        show.videoUrl = response.body().src;
+                        show.duration = response.body().duration;
+                        loaderCallback.onVideoInfoLoaded();
                     }
 
                     @Override
@@ -67,7 +69,7 @@ public class VideoUrlLoader {
 
     public interface ShowDetailsLoader {
 
-        void onVideoInfoLoaded(final VideoInfo videoInfo);
+        void onVideoInfoLoaded();
 
         void onVideoInfoLoadingError(Throwable t);
     }

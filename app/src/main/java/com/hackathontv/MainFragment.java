@@ -21,7 +21,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.hackathontv.cache.EpisodeCache;
 import com.hackathontv.cache.SeriesCache;
 import com.hackathontv.model.Feed;
-import com.hackathontv.model.VideoInfo;
 import com.hackathontv.model.show.Show;
 
 import android.content.Intent;
@@ -195,10 +194,7 @@ public class MainFragment extends BrowseFragment {
                 final Show movie = (Show) item;
                 new VideoUrlLoader(getContext(), new VideoUrlLoader.ShowDetailsLoader() {
                     @Override
-                    public void onVideoInfoLoaded(final VideoInfo videoInfo) {
-
-                        movie.videoUrl = videoInfo.src;
-                        movie.duration = videoInfo.duration;
+                    public void onVideoInfoLoaded() {
                         Log.d(TAG, "Item: " + item.toString());
                         Intent intent = new Intent(getActivity(), DetailsActivity.class);
                         intent.putExtra(DetailsActivity.MOVIE, movie);

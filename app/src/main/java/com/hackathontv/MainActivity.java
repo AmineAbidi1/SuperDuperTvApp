@@ -14,19 +14,8 @@
 
 package com.hackathontv;
 
-import com.hackathontv.cache.SeriesCache;
-import com.hackathontv.model.Feed;
-import com.hackathontv.model.show.Show;
-import com.hackathontv.network.RestApi;
-
 import android.app.Activity;
 import android.os.Bundle;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /*
  * MainActivity class that loads MainFragment
@@ -42,6 +31,5 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
 
 }
